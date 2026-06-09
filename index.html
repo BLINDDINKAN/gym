@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10130f">
+  <meta name="description" content="A shared-friendly workout planner with exercise form guidance and supplement comparisons.">
+  <title>Lift Log — Workout Plan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#today" aria-label="Lift Log home">
+      <span class="brand-mark">LL</span>
+      <span>Lift Log</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#today">Today</a>
+      <a href="#plan">Plan</a>
+      <a href="#supplements">Supplements</a>
+    </nav>
+    <button class="button button-small button-ghost" id="openDataButton">Share & backup</button>
+  </header>
+
+  <main>
+    <section class="hero" id="today">
+      <div class="hero-copy">
+        <p class="eyebrow">Your training, made simple</p>
+        <h1>Show up.<br><span>Put in the work.</span></h1>
+        <p class="hero-intro">A practical workout plan for you and your training partner. Know what to do, how to do it, and why it matters.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#plan">Start today’s workout</a>
+          <button class="button button-ghost" id="addExerciseHero">+ Add exercise</button>
+        </div>
+      </div>
+      <aside class="today-card">
+        <div class="today-card-top">
+          <div>
+            <span class="label">Today</span>
+            <h2 id="todayTitle">Push Day</h2>
+          </div>
+          <div class="day-number" id="todayNumber">01</div>
+        </div>
+        <div class="today-stats">
+          <div><strong id="todayExercises">0</strong><span>exercises</span></div>
+          <div><strong id="todaySets">0</strong><span>working sets</span></div>
+          <div><strong id="todayMinutes">0</strong><span>est. minutes</span></div>
+        </div>
+        <div class="progress-track"><span id="todayProgress"></span></div>
+        <p id="todayProgressText">Ready when you are.</p>
+      </aside>
+    </section>
+
+    <section class="section" id="plan">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Weekly split</p>
+          <h2>Training plan</h2>
+        </div>
+        <button class="button button-dark" id="addExerciseButton">+ Add exercise</button>
+      </div>
+
+      <div class="day-tabs" id="dayTabs" role="tablist" aria-label="Workout days"></div>
+
+      <div class="plan-toolbar">
+        <div>
+          <span class="label">Selected session</span>
+          <h3 id="selectedDayTitle">Push Day</h3>
+          <p id="selectedDayFocus">Chest, shoulders & triceps</p>
+        </div>
+        <div class="toolbar-actions">
+          <label class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="exerciseSearch" type="search" placeholder="Find an exercise">
+          </label>
+          <button class="icon-button" id="editDayButton" title="Edit day name and focus" aria-label="Edit selected day">✎</button>
+        </div>
+      </div>
+
+      <div class="exercise-grid" id="exerciseGrid"></div>
+      <div class="empty-state hidden" id="exerciseEmpty">
+        <p class="empty-icon">+</p>
+        <h3>No exercises here yet</h3>
+        <p>Add the first exercise for this training day.</p>
+        <button class="button button-primary" id="addFirstExercise">Add exercise</button>
+      </div>
+    </section>
+
+    <section class="section supplements-section" id="supplements">
+      <div class="section-heading supplements-heading">
+        <div>
+          <p class="eyebrow">Optional, not magic</p>
+          <h2>Supplement shortlist</h2>
+          <p class="section-lede">Compare reputable sellers, check third-party testing, and confirm the current price before buying.</p>
+        </div>
+        <button class="button button-light" id="addSupplementButton">+ Add listing</button>
+      </div>
+      <div class="trust-strip">
+        <span>Before buying</span>
+        <p>Look for <strong>NSF Certified for Sport</strong>, <strong>Informed Sport</strong>, or <strong>USP Verified</strong>. Supplements support a good diet; they do not replace one.</p>
+      </div>
+      <div class="supplement-grid" id="supplementGrid"></div>
+      <p class="price-note">Prices shown are saved reference prices, not live quotes. Open the seller link to verify today’s price, stock, shipping, and authenticity.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="brand"><span class="brand-mark">LL</span><span>Lift Log</span></div>
+    <p>Train consistently. Use good form. Ask a qualified professional when unsure.</p>
+  </footer>
+
+  <dialog id="exerciseDialog">
+    <form method="dialog" id="exerciseForm">
+      <div class="dialog-heading">
+        <div><span class="label">Exercise editor</span><h2 id="exerciseDialogTitle">Add exercise</h2></div>
+        <button class="dialog-close" type="button" data-close-dialog aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="exerciseId">
+      <div class="form-grid">
+        <label>Name<input required id="exerciseName" placeholder="e.g. Incline dumbbell press"></label>
+        <label>Muscle group<input required id="exerciseMuscle" placeholder="e.g. Upper chest"></label>
+        <label>Sets<input required min="1" max="20" type="number" id="exerciseSets" value="3"></label>
+        <label>Rep range<input required id="exerciseReps" placeholder="e.g. 8–12"></label>
+      </div>
+      <label>What it works<textarea required id="exercisePurpose" rows="2" placeholder="Explain the target muscles and purpose."></textarea></label>
+      <label>How to do it safely<textarea required id="exerciseFormTips" rows="3" placeholder="Short, useful form cues."></textarea></label>
+      <label>GIF or image URL <span class="input-note">(paste a direct URL)</span><input type="url" id="exerciseMedia" placeholder="https://..."></label>
+      <div class="dialog-actions">
+        <button class="button button-danger hidden" type="button" id="deleteExerciseButton">Delete</button>
+        <span class="dialog-spacer"></span>
+        <button class="button button-ghost" type="button" data-close-dialog>Cancel</button>
+        <button class="button button-primary" type="submit">Save exercise</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dayDialog">
+    <form method="dialog" id="dayForm">
+      <div class="dialog-heading">
+        <div><span class="label">Session editor</span><h2>Edit training day</h2></div>
+        <button class="dialog-close" type="button" data-close-dialog aria-label="Close">×</button>
+      </div>
+      <label>Day name<input required id="dayName"></label>
+      <label>Focus<input required id="dayFocus"></label>
+      <div class="dialog-actions"><span class="dialog-spacer"></span><button class="button button-ghost" type="button" data-close-dialog>Cancel</button><button class="button button-primary" type="submit">Save day</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="supplementDialog">
+    <form method="dialog" id="supplementForm">
+      <div class="dialog-heading">
+        <div><span class="label">Listing editor</span><h2>Add supplement listing</h2></div>
+        <button class="dialog-close" type="button" data-close-dialog aria-label="Close">×</button>
+      </div>
+      <div class="form-grid">
+        <label>Product<input required id="supplementName" placeholder="e.g. Creatine monohydrate"></label>
+        <label>Seller<input required id="supplementSeller" placeholder="e.g. Brand website"></label>
+        <label>Reference price<input required id="supplementPrice" placeholder="e.g. ₹999 / $15"></label>
+        <label>Evidence level<select id="supplementEvidence"><option>Strong evidence</option><option>Useful in some cases</option><option>Limited evidence</option></select></label>
+      </div>
+      <label>Why consider it<textarea required id="supplementPurpose" rows="2"></textarea></label>
+      <label>Product or seller URL<input required type="url" id="supplementUrl" placeholder="https://..."></label>
+      <label class="checkbox-label"><input type="checkbox" id="supplementTested"> Third-party testing or certification confirmed</label>
+      <div class="dialog-actions"><span class="dialog-spacer"></span><button class="button button-ghost" type="button" data-close-dialog>Cancel</button><button class="button button-primary" type="submit">Add listing</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="dataDialog">
+    <div class="dialog-heading">
+      <div><span class="label">Share & backup</span><h2>Move your plan between devices</h2></div>
+      <button class="dialog-close" id="closeDataDialog" aria-label="Close">×</button>
+    </div>
+    <p class="dialog-copy">Edits are saved in this browser. Export your plan and send the file to your friend, then they can import it on their device.</p>
+    <div class="data-actions">
+      <button class="button button-primary" id="exportDataButton">Export plan</button>
+      <label class="button button-ghost file-button">Import plan<input type="file" id="importDataInput" accept=".json,application/json"></label>
+      <button class="button button-danger" id="resetDataButton">Reset starter plan</button>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
